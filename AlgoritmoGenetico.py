@@ -9,7 +9,7 @@ from matplotlib import cm
 
 # Definir la función objetivo
 def objective_function(x, y):
-      return e**((-(y+1)**2)-x**2)*(x-1)**2  - ((e**(-(x+1)**2))/3)  +    (e**(-(x**2)-(y**2)))*((10*x**3) - (10*x) + (10*y**3))
+    return e**((-(y+1)**2)-x**2)*(x-1)**2  - ((e**(-(x+1)**2))/3)  +    (e**(-(x**2)-(y**2)))*((10*x**3) - (10*x) + (10*y**3))
 
 # Definir parámetros del algoritmo genético
 population_size = 5
@@ -34,6 +34,7 @@ def evaluate_fitness(individual):
     return objective_function(x, y)
 
 # Función para aplicar la selección de la ruleta
+def roulette_wheel_selection(population, fitness_scores):
     total_fitness = sum(fitness_scores)
     probabilities = [fitness/total_fitness for fitness in fitness_scores]
     probabilities = [max(0, prob) for prob in probabilities]  # Asegurar que las probabilidades sean no negativas
