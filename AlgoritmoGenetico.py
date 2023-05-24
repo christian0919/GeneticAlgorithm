@@ -92,7 +92,15 @@ def genetic_algorithm():
     # Coordenadas del punto más grande encontrado hasta el momento
     best_x, best_y = None, None
     best_fitness = float('-inf')
+    # Obtener coordenadas de la población inicial
+    x_initial = [individual[0] for individual in population]
+    y_initial = [individual[1] for individual in population]
+    z_initial = [objective_function(x, y) for x, y in population]
 
+    # Representar la población inicial en la gráfica de todos los puntos
+    ax_all.scatter(x_initial, y_initial, z_initial, color='blue', label='Población inicial')
+
+    all_population = []
     for generation in range(num_generations):
         # Evaluar la aptitud de cada individuo en la población
         fitness_scores = [evaluate_fitness(individual) for individual in population]
@@ -130,7 +138,7 @@ def genetic_algorithm():
 
         # Reemplazar la población anterior con la nueva generación
         population = offspring
-
+        all_population.append(population)
         # Obtener coordenadas de la población y los nuevos individuos
         x_population = [individual[0] for individual in population]
         y_population = [individual[1] for individual in population]
@@ -141,7 +149,7 @@ def genetic_algorithm():
         colors = [i/num_generations for i in range(len(population))]
 
         # Representar los puntos generados en la gráfica de todos los puntos
-        ax_all.scatter(x_population, y_population, z_population, c=colors, cmap='plasma')
+        ax_all.scatter(x_population, y_population, z_population, c=colors, label='Cruzas')
 
         # Buscar el punto más grande en la población actual
         max_index = np.argmax(z_population)
@@ -152,13 +160,21 @@ def genetic_algorithm():
             best_x, best_y = max_x, max_y
             best_fitness = max_fitness
 
+    for populationF in all_population:
+        x_population = [individual[0] for individual in populationF]
+        y_population = [individual[1] for individual in populationF]
+        z_population = [objective_function(x, y) for x, y in populationF]
+        colors = np.linspace(0, 1, len(populationF))
+        ax_all.scatter(x_population, y_population, z_population, c=colors, cmap='plasma')
+
+    
     # Crear una figura adicional para mostrar el mejor punto
     fig_best = plt.figure()
     ax_best = fig_best.add_subplot(111, projection='3d')
     ax_best.plot_surface(x_mesh, y_mesh, z_mesh, cmap='viridis', alpha=0.5)
     ax_best.scatter(best_x, best_y, best_fitness, color='red', label='Mejor Punto')
     ax_best.legend()
-
+	
     # Mostrar las figuras con los puntos generados y el mejor punto encontrado
     plt.show()
 
